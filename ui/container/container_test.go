@@ -249,7 +249,7 @@ func TestContainer(t *testing.T) {
 
 		assert.Len(t, c.Nodes, 3)
 		for _, k := range []string{"1", "2", "3"} {
-			assert.EqualValues(t, fmt.Sprintf("baz%s", k), c.Nodes.Find(node.DefaultGroup, k).Attributes.GetValue(), "%+v", c)
+			assert.EqualValues(t, fmt.Sprintf("baz%s", k), c.Nodes.Find(k).Attributes.GetValue(), "%+v", c)
 		}
 	})
 
@@ -276,12 +276,12 @@ func TestContainer(t *testing.T) {
 		assert.Len(t, c.Nodes, 6)
 
 		for _, k := range []string{"1", "2", "3"} {
-			n := c.Nodes.Find(node.DefaultGroup, k)
+			n := c.Nodes.Find(k)
 			assert.EqualValues(t, fmt.Sprintf("baz%s", k), n.Messages[len(n.Messages)-1].Text, "%+v", c)
 		}
 
 		for _, k := range []string{"4", "5", "6"} {
-			assert.EqualValues(t, "baz", c.Nodes.Find(node.DefaultGroup, k).Messages[0].Text, "%+v", c)
+			assert.EqualValues(t, "baz", c.Nodes.Find(k).Messages[0].Text, "%+v", c)
 		}
 
 		assert.Len(t, c.Messages, 1)
@@ -299,10 +299,10 @@ func TestContainer(t *testing.T) {
 		c.Reset()
 
 		assert.Empty(t, c.Messages)
-		assert.Empty(t, c.Nodes.Find(node.DefaultGroup, "1").Messages)
-		assert.Empty(t, c.Nodes.Find(node.DefaultGroup, "1").Attributes.(*node.InputAttributes).FieldValue)
-		assert.Empty(t, c.Nodes.Find(node.DefaultGroup, "2").Messages)
-		assert.Empty(t, c.Nodes.Find(node.DefaultGroup, "2").Attributes.(*node.InputAttributes).FieldValue)
+		assert.Empty(t, c.Nodes.Find("1").Messages)
+		assert.Empty(t, c.Nodes.Find("1").Attributes.(*node.InputAttributes).FieldValue)
+		assert.Empty(t, c.Nodes.Find("2").Messages)
+		assert.Empty(t, c.Nodes.Find("2").Attributes.(*node.InputAttributes).FieldValue)
 	})
 
 	t.Run("method=SortNodes", func(t *testing.T) {

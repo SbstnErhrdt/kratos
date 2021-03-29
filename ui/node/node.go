@@ -80,7 +80,7 @@ type jsonRawNode struct {
 }
 
 func (n *Node) ID() string {
-	return ToID(n.Group, n.Attributes.ID())
+	return n.Attributes.ID()
 }
 
 func ToID(group Group, attributeID string) string {
@@ -96,9 +96,9 @@ func (n *Node) GetValue() interface{} {
 	return n.Attributes.GetValue()
 }
 
-func (n Nodes) Find(group Group, id string) *Node {
+func (n Nodes) Find(id string) *Node {
 	for _, nn := range n {
-		if nn.ID() == string(group)+"/"+id {
+		if nn.ID() == id {
 			return nn
 		}
 	}
@@ -141,9 +141,9 @@ func (n Nodes) SortBySchema(schemaRef, prefix string, keysInOrder []string) erro
 	}
 
 	sort.SliceStable(n, func(i, j int) bool {
-		a := strings.Split(n[i].ID(), "/")
-		b := strings.Split(n[j].ID(), "/")
-		return getKeyPosition(a[len(a)-1]) < getKeyPosition(b[len(b)-1])
+		a := n[i].ID()
+		b := n[j].ID()
+		return getKeyPosition(a) < getKeyPosition(b)
 	})
 
 	return nil
@@ -155,13 +155,15 @@ func (n *Nodes) Remove(ids ...string) {
 		return
 	}
 
+	var r Nodes
 	for _, needle := range ids {
-		for i := range *n {
-			if (*n)[i].ID() == needle {
-				*n = append((*n)[:i], (*n)[i+1:]...)
+		for k, v := range *n {
+			if (*n)[k].ID() != needle {
+				r = append(r, v)
 			}
 		}
 	}
+	*n = r
 }
 
 // Upsert updates or appends a node.

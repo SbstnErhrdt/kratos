@@ -405,7 +405,7 @@ func (h *Handler) submitSettingsFlow(w http.ResponseWriter, r *http.Request, ps 
 
 	if updateContext == nil {
 		c := &UpdateContext{Session: ss, Flow: f}
-		h.d.SettingsFlowErrorHandler().WriteFlowError(w, r, node.DefaultGroup, f, c.GetIdentityToUpdate(), errors.WithStack(schema.NewNoRegistrationStrategyResponsible()))
+		h.d.SettingsFlowErrorHandler().WriteFlowError(w, r, node.DefaultGroup, f, c.GetIdentityToUpdate(), errors.WithStack(schema.NewNoSettingsStrategyResponsible()))
 		return
 	}
 
